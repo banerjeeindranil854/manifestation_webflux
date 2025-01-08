@@ -1,0 +1,360 @@
+openapi: 3.0.1
+info:
+  title: Manifestation API
+  description: An API to manage Avatar and its related functionality
+  version: v2.0
+servers:
+  - url: http://localhost:8080
+    description: local server
+paths:
+  /avatar/{MSISDN}:
+    get:
+      summary: To fetch main  Avatar
+      description: This operation is used to fetch main Avatar.
+      tags:
+        - avater
+      parameters:
+        - name: MSISDN
+          in: path
+          description: Customer's MSISDN
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Avatar fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FetchAvatarResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Method Not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /token/url:
+    post:
+      summary: To fetch Channel Token in Redirect URL
+      description: This operation is used to fetch Channel Token in Redirect URL.
+      tags:
+        - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Channel Token Saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaveTokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Method Not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-codegen-request-body-name: body
+  /token/{tokenId}:
+    post:
+      summary: To fetch Token with TokenId
+      description: This operation is used to fetch Token with TokenId.
+      tags:
+        - token
+      parameters:
+        - name: tokenId
+          in: path
+          description: Token Id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FetchTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Token Fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FetchTokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Method Not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    FetchAvatarResponse:
+      required:
+        - statusCode
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status code from target system to indicate transaction status
+          example: success
+        statusCode:
+          type: integer
+          description: Status code from target system to indicate transaction status
+          example: 0
+        statusMessage:
+          type: string
+          description: Status response description.
+          example: Main Avatar fetched successfully
+        data:
+          type: object
+          properties:
+            imageUrl:
+              type: string
+              description: Image URL
+              example: https://models.readyplayer.me/64393255e7bf8de67ca447bd.png
+            createdAt:
+              type: string
+              description: Image creation date
+              example: '2023-05-03T08:32:49.000Z'
+            updatedAt:
+              type: string
+              description: Image updation date
+              example: '2023-05-03T08:32:49.000Z'
+    SaveTokenRequest:
+      required:
+        - channelName
+        - token
+        - transactionId
+      type: object
+      properties:
+        token:
+          type: string
+          description: Channel Token
+          example: >-
+            eyJhbGciOkJSUzI1NddsInR5cCI6IkpXVCIsImtpZCI6IkFEbFBhd0RmNVloTEtsMGYxV1gyNSJ9
+        channelName:
+          type: string
+          description: Name of the calling channel.
+          example: MyMTN
+        transactionId:
+          type: string
+          description: Transaction identifier used by client.
+          example: '12345672345435'
+    SaveTokenResponse:
+      required:
+        - statusCode
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status code from target system to indicate transaction status.
+          example: success
+        statusCode:
+          type: integer
+          description: Status code from target system to indicate transaction status.
+          example: 0
+        statusMessage:
+          type: string
+          description: Status response description.
+          example: Token saved successfully
+        transactionId:
+          type: string
+          description: Transaction identifier used by client.
+          example: '12345672345435'
+        data:
+          type: object
+          properties:
+            redirectUrl:
+              type: string
+              description: Redirect URL
+              example: >-
+                https://avatars.mtn.ng/mymtn/token/643d497c-5dbe-4fe1-aa30-3dac0eab8ac5
+    FetchTokenRequest:
+      required:
+        - channelName
+        - transactionId
+      type: object
+      properties:
+        channelName:
+          type: string
+          description: Name of the calling channel.
+          example: MyMTN
+        transactionId:
+          type: string
+          description: Transaction identifier used by client.
+          example: '12345672345435'
+    FetchTokenResponse:
+      required:
+        - statusCode
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status code from target system to indicate transaction status.
+          example: success
+        statusCode:
+          type: integer
+          description: Status code from target system to indicate transaction status.
+          example: 0
+        statusMessage:
+          type: string
+          description: Status response description.
+          example: Token fetched successfully
+        transactionId:
+          type: string
+          description: Transaction identifier used by client.
+          example: '12345672345435'
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+              description: Token
+              example: >-
+                eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJibkxaMy1PM1BPd09pQ3JTOXJBcSJ9
+    Error:
+      required:
+        - statusCode
+        - statusMessage
+      type: object
+      properties:
+        statusCode:
+          type: string
+          description: >-
+            This is the MADAPI Canonical Error Code (it is 4 characters long and
+            it is not the HTTP Status Code which is 3 characters long). Back-end
+            system errors are mapped to specific canonical error codes which are
+            returned. More information on these mappings can be found on the
+            MADAPI Confluence Page 'Response Codes'
+          example: '1000'
+        status:
+          type: string
+          description: >-
+            More details and corrective actions related to the error which can
+            be shown to a client
+        statusMessage:
+          type: string
+          description: >-
+            More details and corrective actions related to the error which can
+            be shown to a client
+        supportMessage:
+          type: string
+          description: >-
+            Internal message meant for consumers of the API to troubleshoot the
+            error (could possible include the back-end system error code in the
+            message if it would be useful)
+x-original-swagger-version: '2.0'
